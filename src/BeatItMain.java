@@ -4,7 +4,7 @@ public class BeatItMain extends JFrame {
     public BeatItMain() {
         setTitle("Beat It - 2D-Shooting game");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setResizable(false);
+        setResizable(true);
 
         GamePanel panel = new GamePanel();
         add(panel);
