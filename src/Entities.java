@@ -58,20 +58,25 @@ class Player extends Entity{
 
 
 class Bullet extends Entity{
+    Image bulletImage;
     int dy;
     boolean alive=true;
     Bullet(int x,int y,int size,int dy){
-        this.x=x;
-        this.y=y;
-        this.size=size;
-        this.dy=dy;}
+        this.x = x;
+        this.y = y;
+        this.size = size;
+        this.dy = dy;
+
+        bulletImage = new ImageIcon("assets/bullet.png").getImage();
+    }
+
     void update(GamePanel gp){
         y+=dy;
         if(y+size<0||y>GamePanel.HEIGHT) alive=false;}
     void render(Graphics2D g2){
-        g2.setColor(Color.PINK);
-        g2.fillRect(x,y,size/2,size);
+        g2.drawImage(bulletImage, x, y, size, size*3, null);
     }
+
 }
 
 class Enemy extends Entity{
