@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.awt.*;
 
 enum GameState{
@@ -30,13 +31,17 @@ abstract class Entity{ int x,y,size; Rectangle getBounds(){
 }
 
 class Player extends Entity{
+    Image playerImage;
     int speed=6,lives=3; boolean left,right,up,down;
-    long lastShotTime=0, fireCooldown=180;
+    long lastShotTime=0, fireCooldown=100;
     Player(int x,int y,int size){
-        this.x=x;
-        this.y=y;
-        this.size=size;
+        this.x = x;
+        this.y = y;
+        this.size = size;
+
+        playerImage = new ImageIcon("assets/player.png").getImage();
     }
+
     void update(GamePanel gp){
         if(left)x-=speed;
         if(right)x+=speed;
@@ -46,10 +51,11 @@ class Player extends Entity{
         y=Math.max(0,Math.min(GamePanel.HEIGHT-size,y));
     }
     void render(Graphics2D g2){
-        g2.setColor(Color.BLUE);
-        g2.fillOval(x,y,size,size);
+        g2.drawImage(playerImage, x, y, size, size, null);
     }
+
 }
+
 
 class Bullet extends Entity{
     int dy;
