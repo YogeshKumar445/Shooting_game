@@ -28,7 +28,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     }
 
     void initGame() {
-        player = new Player(WIDTH/2-20, HEIGHT-120, 44);
+        player = new Player(WIDTH/2-40, HEIGHT-120, 88);
         bullets.clear();
         enemies.clear();
         score=0; level=1; enemySpawnInterval=50; enemySpawnTimer=0;
@@ -52,14 +52,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             long now = System.nanoTime();
             delta += (now-last)/TPF;
             last=now;
-            while(delta>=1) {
-                tick(); delta--;
-            }
+            while(delta>=1) { tick(); delta--; }
             repaint();
-            try {
-                Thread.sleep(2);
-            }
-            catch(Exception e) {}
+            try { Thread.sleep(2); } catch(Exception e) {}
         }
     }
 
@@ -68,15 +63,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             case MENU: break;
             case RUNNING:
                 player.update(this);
-                synchronized(bullets){
-                    bullets.forEach(b->b.update(this));
-                }
-                synchronized(enemies){
-                    enemies.forEach(e->e.update(this));
-                }
-                handleCollisions();
-                removeDead();
-                spawnLogic();
+                synchronized(bullets){ bullets.forEach(b->b.update(this)); }
+                synchronized(enemies){ enemies.forEach(e->e.update(this)); }
+                handleCollisions(); removeDead(); spawnLogic();
                 break;
             case PAUSED: break;
             case GAME_OVER: break;
@@ -85,18 +74,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     void spawnLogic() {
         enemySpawnTimer++;
-        if(enemySpawnTimer>=enemySpawnInterval){
-            spawnEnemy();
-            enemySpawnTimer=0;
-        }
-        if(score>level*20){
-            level++;
-            enemySpawnInterval=Math.max(12, enemySpawnInterval-6);
-        }
+        if(enemySpawnTimer>=enemySpawnInterval){ spawnEnemy(); enemySpawnTimer=0; }
+        if(score>level*20){ level++; enemySpawnInterval=Math.max(12, enemySpawnInterval-6); }
     }
 
     void spawnEnemy() {
-        int size=28+rng.nextInt(30), x=rng.nextInt(WIDTH-size), y=-size, speed=2+rng.nextInt(2)+level/2;
+        int size=50+rng.nextInt(40), x=rng.nextInt(WIDTH-size), y=-size, speed=2+rng.nextInt(2)+level/2;
         EnemyBehavior beh = rng.nextBoolean()? new StraightDownBehavior(): new ZigZagBehavior();
         enemies.add(new Enemy(x,y,size,speed,beh));
     }
@@ -124,7 +107,9 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         }
     }
 
-    void removeDead(){ bullets.removeIf(b->!b.alive); enemies.removeIf(e->!e.alive||e.y>HEIGHT+100); }
+    void removeDead(){ bullets.removeIf(b->!b.alive);
+        enemies.removeIf(e->!e.alive||e.y>HEIGHT+100);
+    }
 
     @Override
     protected void paintComponent(Graphics g){
@@ -181,7 +166,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         if(now-player.lastShotTime<player.fireCooldown) return;
         player.lastShotTime=now;
         int bx=player.x+player.size/2-6, by=player.y-8;
-        bullets.add(new Bullet(bx,by,12,-12));
+        bullets.add(new Bullet(bx - 15, by, 20, -10));
+        bullets.add(new Bullet(bx, by, 20, -12));
+        bullets.add(new Bullet(bx + 15, by, 20, -10));
+
     }
 
     @Override

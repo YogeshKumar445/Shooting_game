@@ -56,7 +56,6 @@ class Player extends Entity{
 
 }
 
-
 class Bullet extends Entity{
     Image bulletImage;
     int dy;
@@ -80,20 +79,25 @@ class Bullet extends Entity{
 }
 
 class Enemy extends Entity{
+    Image asteroidImage;
     int speed;
     EnemyBehavior behavior;
     boolean alive=true;
     Enemy(int x,int y,int size,int speed,EnemyBehavior b){
-        this.x=x;
-        this.y=y;
-        this.size=size;
-        this.speed=speed;
-        this.behavior=b;}
+        this.x = x;
+        this.y = y;
+        this.size = size;
+        this.speed = speed;
+        this.behavior = b;
+
+        asteroidImage = new ImageIcon("assets/asteroid.png").getImage();
+    }
+
     void update(GamePanel gp){
         behavior.move(this,gp);
         if(y>GamePanel.HEIGHT+200) alive=false;}
     void render(Graphics2D g2){
-        g2.setColor(Color.RED);
-        g2.fillRoundRect(x,y,size,size,6,6);
+        g2.drawImage(asteroidImage, x, y, size, size, null);
     }
+
 }
